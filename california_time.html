@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>California Time Clock</title>
+    <!-- Load Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Set a modern font */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="time-card" class="bg-white p-8 md:p-12 rounded-xl shadow-2xl w-full max-w-lg text-center border-t-4 border-indigo-600">
+        
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-2">Current California Time</h1>
+        <p class="text-indigo-600 text-xl font-semibold mb-6">(America/Los_Angeles)</p>
+        
+        <div id="display" class="text-5xl md:text-6xl font-bold text-gray-900 my-4 tracking-tight">
+            Loading...
+        </div>
+        
+        <div id="date" class="text-lg text-gray-500 mt-2">
+            
+        </div>
+
+        <p class="mt-8 text-sm text-gray-400">Time updates every second.</p>
+    </div>
+
+    <script>
+        // Function to update the time display
+        function updateCaliforniaTime() {
+            // Options for formatting the date and time
+            const timeOptions = {
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: true, 
+                timeZone: 'America/Los_Angeles' // Specify California timezone (PST/PDT)
+            };
+            
+            const dateOptions = {
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                timeZone: 'America/Los_Angeles'
+            };
+
+            const now = new Date();
+            
+            // Format time (e.g., 03:45:30 PM)
+            const timeString = new Intl.DateTimeFormat('en-US', timeOptions).format(now);
+            
+            // Format date (e.g., Monday, October 21, 2024)
+            const dateString = new Intl.DateTimeFormat('en-US', dateOptions).format(now);
+
+            // Update the HTML elements
+            document.getElementById('display').textContent = timeString;
+            document.getElementById('date').textContent = dateString;
+        }
+
+        // Run the function immediately to show time on load
+        updateCaliforniaTime();
+
+        // Set the function to run every 1000 milliseconds (1 second)
+        setInterval(updateCaliforniaTime, 1000);
+    </script>
+</body>
+</html>
