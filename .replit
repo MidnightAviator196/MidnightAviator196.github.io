@@ -1,6 +1,22 @@
 [[ports]]
 localPort = 80
-externalPort = 5000
+externalPort = 80
 
 [agent]
 expertMode = true
+
+[workflows]
+runButton = "Web server"
+
+[[workflows.workflow]]
+name = "Web server"
+mode = "sequential"
+author = 14834069
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Web server"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m http.server 5000"
