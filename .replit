@@ -16,4 +16,4 @@ author = 14834069
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python3 -m http.server 5000"
+args = "npx serve -l 5000"
