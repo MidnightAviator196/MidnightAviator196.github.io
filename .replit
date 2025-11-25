@@ -1,3 +1,19 @@
+
 [[ports]]
 localPort = 80
-externalPort = 5000
+externalPort = 80
+
+[agent]
+expertMode = true
+
+[workflows]
+runButton = "Web server"
+
+[[workflows.workflow]]
+name = "Web server"
+mode = "sequential"
+author = 14834069
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "static-web-server -p 5000 -d ."
