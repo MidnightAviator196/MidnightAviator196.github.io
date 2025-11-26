@@ -97,6 +97,27 @@
             color: red;
             margin-top: 0.5rem;
         }
+
+        .success {
+            color: green;
+            margin-top: 0.5rem;
+        }
+
+        .warning {
+            color: orange;
+            margin-top: 0.5rem;
+        }
+
+        .logout-btn {
+            margin-top: 1rem;
+            background-color: #e74c3c;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
     </style>
 </head>
 <body>
@@ -118,21 +139,87 @@
             <div class="logo-container">
                 <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google Logo">
                 <img src="https://www.apple.com/ac/structured-data/images/knowledge_graph_logo.png" alt="Apple Logo">
-                <button onclick="window.location.href='index.html'";>Return</button>
             </div>
+            <button onclick="window.location.href='index.html'">Return</button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
     </div>
     
     <script>
+        const MAX_ATTEMPTS = 5;
+        const LOCKOUT_TIME = 30000; // 30 seconds
+        const CORRECT_PASSWORD = 'hello_world';
+
+        function getAttemptData() {
+            const data = sessionStorage.getItem('loginAttempts');
+            return data ? JSON.parse(data) : { count: 0, lockedUntil: 0 };
+        }
+
+        function setAttemptData(data) {
+            sessionStorage.setItem('loginAttempts', JSON.stringify(data));
+        }
+
+        function isLockedOut() {
+            const data = getAttemptData();
+            return data.lockedUntil > Date.now();
+        }
+
+        function getRemainingLockoutTime() {
+            const data = getAttemptData();
+            return Math.ceil((data.lockedUntil - Date.now()) / 1000);
+        }
+
         function checkPassword() {
+            const errorMsg = document.getElementById('errorMessage');
+            
+            if (isLockedOut()) {
+                const remaining = getRemainingLockoutTime();
+                errorMsg.textContent = `Too many attempts. Try again in ${remaining} seconds.`;
+                errorMsg.className = 'error warning';
+                return;
+            }
+
             const password = document.getElementById('passwordInput').value;
             
-            if (password === 'hello_world') {
+            // Use constant-time comparison to prevent timing attacks
+            if (constantTimeCompare(password, CORRECT_PASSWORD)) {
+                sessionStorage.setItem('authenticated', 'true');
+                setAttemptData({ count: 0, lockedUntil: 0 });
                 document.getElementById('passwordPrompt').style.display = 'none';
                 document.getElementById('secretContent').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
             } else {
-                window.location.href = 'index.html';
+                const attempts = getAttemptData();
+                attempts.count++;
+
+                if (attempts.count >= MAX_ATTEMPTS) {
+                    attempts.lockedUntil = Date.now() + LOCKOUT_TIME;
+                    setAttemptData(attempts);
+                    errorMsg.textContent = `Too many failed attempts. Account locked for ${LOCKOUT_TIME / 1000} seconds.`;
+                    errorMsg.className = 'error warning';
+                    document.getElementById('passwordInput').disabled = true;
+                    setTimeout(() => {
+                        document.getElementById('passwordInput').disabled = false;
+                        document.getElementById('passwordInput').focus();
+                    }, LOCKOUT_TIME);
+                } else {
+                    const remaining = MAX_ATTEMPTS - attempts.count;
+                    errorMsg.textContent = `Invalid password. ${remaining} attempt${remaining !== 1 ? 's' : ''} remaining.`;
+                    errorMsg.className = 'error';
+                    setAttemptData(attempts);
+                }
+                
+                document.getElementById('passwordInput').value = '';
             }
+        }
+
+        function constantTimeCompare(a, b) {
+            if (a.length !== b.length) return false;
+            let result = 0;
+            for (let i = 0; i < a.length; i++) {
+                result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+            }
+            return result === 0;
         }
 
         function togglePassword() {
@@ -143,10 +230,31 @@
                 passwordInput.type = 'password';
             }
         }
+
+        function logout() {
+            sessionStorage.removeItem('authenticated');
+            sessionStorage.removeItem('loginAttempts');
+            document.getElementById('passwordPrompt').style.display = 'block';
+            document.getElementById('secretContent').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMessage').textContent = '';
+            document.getElementById('passwordInput').type = 'password';
+            document.getElementById('passwordInput').focus();
+        }
+
+        // Check if already authenticated
+        window.addEventListener('load', function() {
+            if (sessionStorage.getItem('authenticated') === 'true') {
+                document.getElementById('passwordPrompt').style.display = 'none';
+                document.getElementById('secretContent').style.display = 'block';
+            } else {
+                document.getElementById('passwordInput').focus();
+            }
+        });
         
         // Allow Enter key to submit
         document.getElementById('passwordInput').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' && !this.disabled) {
                 checkPassword();
             }
         });
