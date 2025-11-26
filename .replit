@@ -1,13 +1,18 @@
+modules = ["python-3.11"]
 
 [[ports]]
 localPort = 80
+externalPort = 80
+
+[[ports]]
+localPort = 5000
 externalPort = 80
 
 [agent]
 expertMode = true
 
 [workflows]
-runButton = "Web server"
+runButton = "Project"
 
 [[workflows.workflow]]
 name = "Web server"
@@ -17,3 +22,24 @@ author = 14834069
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "static-web-server -p 5000 -d ."
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Web Server"
+
+[[workflows.workflow]]
+name = "Web Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 -m http.server 5000 --bind 0.0.0.0"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"

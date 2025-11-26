@@ -33,14 +33,37 @@
             display: none;
         }
         
-        input[type="password"] {
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        input[type="password"], input[type="text"].password-input {
             padding: 0.75rem;
             width: 100%;
-            margin: 1rem 0;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 1rem;
             box-sizing: border-box;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #667eea;
+            font-size: 1.2rem;
+            padding: 0;
+            padding-left: 0.5rem;
+        }
+
+        .toggle-password:hover {
+            background-color: transparent;
+            color: #764ba2;
         }
         
         button {
@@ -81,7 +104,10 @@
         <div id="passwordPrompt">
             <h1>Secret Page</h1>
             <p>Enter the password to continue</p>
-            <input type="password" id="passwordInput" placeholder="Enter password">
+            <div class="password-wrapper">
+                <input type="password" id="passwordInput" placeholder="Enter password">
+                <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+            </div>
             <button onclick="checkPassword()">Submit</button>
             <p id="errorMessage" class="error"></p>
         </div>
@@ -106,6 +132,15 @@
                 document.getElementById('secretContent').style.display = 'block';
             } else {
                 window.location.href = 'index.html';
+            }
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
             }
         }
         
