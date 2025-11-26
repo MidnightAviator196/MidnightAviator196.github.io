@@ -15,8 +15,6 @@
 
 This is a simple static website project featuring multiple interactive pages built with HTML, CSS, and JavaScript. The website includes a home page, a real-time California clock, and a password-protected secret page.
 
-**Live Demo:** [View on Replit](https://replit.com/@MidnightAviator196/MidnightAviator196githubio)
-
 ---
 
 ## ✨ Features
