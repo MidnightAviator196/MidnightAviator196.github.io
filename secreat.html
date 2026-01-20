@@ -163,9 +163,9 @@
             <p>You've entered the correct password!</p>
             <p>Here are some secret links and information:</p>
             <div id="toggleText1">
-                <button onclick="toggleText()" class="toggle-btn">Show/Hide</button>
-                <p id="hiddenText" style="display: none;">You must click the button to show this text!</p>
-                <p id="hiddenText2" style="display: none;">Links:</p>
+                <button onclick="toggleAllText()" class="toggle-btn">Show/Hide</button>
+                <p class="hidden-text" style="display: none;">You must click the button to show this text!</p>
+                <p class="hidden-text" style="display: none;">Links:</p>
             </div>
             <div class="logo-container">
                 <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png" alt="Google Logo">
@@ -188,12 +188,14 @@
         const LOCKOUT_TIME = 30000; // 30 seconds
         const CORRECT_PASSWORD = 'hello_world';
         // The fuction below is for the toggle button
-        function toggleText() {
-          var text = document.getElementById("hiddenText");
-          if (text.style.display === "none") {
-            text.style.display = "block";
-          } else {
-            text.style.display = "none";
+        function toggleAllText() {
+          var elements = document.getElementsByClassName("hidden-text");
+          for (var i = 0; i < elements.length; i++) {
+            if (elements[i].style.display === "none") {
+              elements[i].style.display = "block";
+            } else {
+              elements[i].style.display = "none";
+            }
           }
         }
         function getAttemptData() {
