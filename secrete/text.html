@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected Content</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            text-align: center;
+        }
+        /* Hidden by default - we will show one of these via JavaScript */
+        #protectedArea { display: none; }
+        #deniedArea { display: none; }
+        
+        .btn {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECTION A: This is what you see if you HAVE access -->
+    <div id="protectedArea" class="container">
+        <h1>🔒 Secret Document</h1>
+        <p>This text is only visible because you came from the Secret Links page properly!</p>
+        <hr>
+        <p>This is where the super secret information goes. You've successfully bypassed the direct URL check.</p>
+        <br>
+           <p>Links:</p>
+           <ul>
+             <li>
+                <button onclick="window.location.href='/secrete/secret_links.html'">Secrete Links Page</button>
+             </li>
+             <li>
+                <button onclick="window.location.href='../secreat.html'">Main Secrete Page</button>
+             </li>
+             <li>
+                <button onclick="window.location.href='../index.html'">Main Page</button>
+             </li>
+           </ul>
+           <br>
+           <p>Info:</p>
+           <ul>
+                <li>Code@key.py for ciphers app: ----------</li>
+                <li>mommy is attacking at dawn</li>
+            </ul>
+        <hr>
+        <a href="secret_links.html" class="btn">Back to Links</a>
+    </div>
+
+    <!-- SECTION B: This is what you see if you tried to CHEAT by typing the link directly -->
+    <div id="deniedArea" class="container">
+        <h1>🚫 Access Denied</h1>
+        <p>You do not have permission to view this page directly.</p>
+        <p>Please use the official links from the Secret Links page after entering the passcode.</p>
+        <a href="secret_links.html" class="btn">Go to Secret Links</a>
+    </div>
+
+    <script>
+        // --- HOW THE PROTECTION WORKS ---
+        
+        // 1. When the page loads, we look into the browser's "sessionStorage".
+        // 2. We are looking for a key named 'can_access_text' that should be set to 'true'.
+        // 3. This key is ONLY set by the 'grantAccessAndNavigate' function in secret_links.html.
+        
+        // Try to get the access key from the browser storage
+        const hasAccess = sessionStorage.getItem('can_access_text');
+
+        // Check if the key exists and is equal to 'true'
+        if (hasAccess === 'true') {
+            // SUCCESS: Show the secret content (Section A)
+            document.getElementById('protectedArea').style.display = 'block';
+            
+            // SECURITY TIP: If you want to make sure they can't refresh the page and stay in,
+            // you can uncomment the line below to "burn" the key after it's used once.
+            // sessionStorage.removeItem('can_access_text');
+        } else {
+            // FAILURE: They didn't come from the links page properly. Show error (Section B).
+            document.getElementById('deniedArea').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
