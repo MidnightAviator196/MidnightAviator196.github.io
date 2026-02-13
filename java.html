@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Java Program</title>
+      <script>
+         function hello() {
+            alert("Hello World");
+            alert("The prisnors have escaped")
+         }
+         function noDrag() {
+            alert("You can't drag me")
+            location.reload()
+         }
+      </script>
+       <style>
+         .button1{
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer
+         }
+          .button1:hover{
+             background-color: #3e8e41
+          }
+        </style>
+   </head>
+<body>
+    <h1>Java program:</h1>
+    <p>Click the button to see the result</p>
+   <p>This is a java program that prints "Hello World" to the screen</p>
+   <hr>
+   <button id="button1" onclick="hello()" ondrag="noDrag()">click me</button>
+</body>
+</html>     
